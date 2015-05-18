@@ -1,0 +1,18 @@
+{
+  "name": "electron-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/browser/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Quramy",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-inject": "^1.2.0",
+    "main-bower-files": "^2.8.0"
+  }
+}
