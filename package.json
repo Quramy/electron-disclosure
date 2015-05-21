@@ -1,5 +1,5 @@
 {
-  "name": "electron-bot",
+  "name": "electron-disclosure",
   "version": "1.0.0",
   "description": "",
   "main": "src/browser/main.js",
