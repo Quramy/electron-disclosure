@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/browser/main.js",
   "scripts": {
+    "run": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,5 +15,8 @@
     "gulp": "^3.8.11",
     "gulp-inject": "^1.2.0",
     "main-bower-files": "^2.8.0"
+  },
+  "dependencies": {
+    "node-twitter-api": "^1.6.0"
   }
 }

@@ -1,24 +1,60 @@
 'use strict';
 
+var app = require('app');
 var BrowserWindow = require('browser-window');
+var confirmLogin = require('./confirmLogin');
 
 var menuCreator = {
+  appMenu: function () {
+    return [{
+      label: 'captbot',
+      submenu: [{
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click: function () {app.quit()}
+      }]
+    }, {
+      label: 'Capture',
+      submenu: [{
+        label: 'Start',
+        accelerator: 'Command+Z',
+        click: function () {}
+      }, { 
+        label: 'Test tweet',
+        accelerator: 'Command+T',
+        click: function() { 
+          /*
+          var w = BrowserWindow.getFocusedWindow();
+
+          w && setTimeout(function () {
+            w.emit('capture');
+          }, 3000);*/
+          confirmLogin(function (res) {
+            app.emit('start.capture');
+          });
+        } 
+      }]
+    }];
+  },
   devAssistMenu: function () {
-    // メニュー情報の作成
-    return [
-      {
-        label: 'ReadUs',
-        submenu: [
-          {label: 'Quit', accelerator: 'Command+Q', click: function () {app.quit();}}
-        ]
+    return [{
+      label: 'Develop',
+      submenu: [{ 
+        label: 'Reload',
+        accelerator: 'Command+R',
+        click: function() { 
+          var w = BrowserWindow.getFocusedWindow();
+          w && w.reloadIgnoringCache(); 
+        }
       }, {
-        label: 'View',
-        submenu: [
-          { label: 'Reload', accelerator: 'Command+R', click: function() { BrowserWindow.getFocusedWindow().reloadIgnoringCache(); } },
-          { label: 'Toggle DevTools', accelerator: 'Alt+Command+I', click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); } }
-        ]
-      }
-    ];
+        label: 'Toggle DevTools',
+        accelerator: 'Alt+Command+I',
+        click: function() { 
+          var w = BrowserWindow.getFocusedWindow();
+          w && w.toggleDevTools();
+        }
+      }]
+    }];
   }
 };
 

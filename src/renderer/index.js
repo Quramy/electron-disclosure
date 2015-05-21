@@ -1,3 +1,3 @@
 'use strict';
 
-console.log('HELLO');
+angular.module('renderer', []);

@@ -3,26 +3,42 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var Menu = require('menu');
-
-require('crash-reporter').start();
-
+var menuTmpl = require('./menuTmpl');
+var template = menuTmpl.appMenu();
 var mainWindow = null;
+
+if(process.env.NODE_ENV === 'develop'){
+  require('crash-reporter').start();
+  template = template.concat(menuTmpl.devAssistMenu());
+}
 
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin') app.quit();
 });
 
 app.on('ready', function() {
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  var starterWindow = new BrowserWindow({
+    width: 400,
+    height: 250
+  });
+  starterWindow.loadUrl('file://' + __dirname + '/../starter.html');
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(require('./menuTmpl').devAssistMenu()));
-  // ブラウザ(Chromium)の起動, 初期画面のロード
-  mainWindow = new BrowserWindow({width: 800, height: 600});
-  mainWindow.loadUrl('file://' + __dirname + '/../index.html');
-
-  mainWindow.on('closed', function() {
-    mainWindow = null;
+  starterWindow.on('start.capture', function () {
+    mainWindow = new BrowserWindow({
+      width: 10,
+      height: 10,
+      transparent: true,
+      fullscreen: false,
+      frame: false
+    });
+    mainWindow.loadUrl('file://' + __dirname + '/../index.html');
+    mainWindow.on('closed', function() {
+      mainWindow = null;
+    });
+  });
+  starterWindow.on('stop.capture', function () {
+    mainWindow && mainWindow.emit('stop');
   });
 });
-
-
 

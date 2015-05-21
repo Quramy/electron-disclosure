@@ -1,12 +1,18 @@
-<!DOCTYPE html>
 <html ng-app="renderer">
 <head>
-<meta charset="UTF-8">
-<title>Bot</title>
+  <meta charset="UTF-8">
+  <!-- inject:css -->
+  <!-- endinject -->
+  <title></title>
 </head>
 <body>
-<div ng-include="'main.html'"></div>
-<!-- build:js -->
+
+<div ng-controller="StarterController as starter">
+  <img ng-attr-src="{{starter.account.settings().profile_image_url}}"></img>
+  <button ng-click="starter.start()" ng-if="!starter.started">Start Capture and tweet</button>
+  <button ng-click="starter.stop()" ng-if="starter.started">Stop Capture and tweet</button>
+</div>
+
 <!-- inject:js -->
 <script src="../bower_components/angularjs/angular.js"></script>
 <script src="../bower_components/lodash/lodash.js"></script>
@@ -19,6 +25,5 @@
 <script src="renderer/timeline.service.js"></script>
 <script src="renderer/twitter.service.js"></script>
 <!-- endinject -->
-<!-- endbulid -->
 </body>
 </html>
