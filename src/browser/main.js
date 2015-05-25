@@ -18,13 +18,26 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+  /*
   var starterWindow = new BrowserWindow({
     width: 400,
     height: 250
   });
   starterWindow.loadUrl('file://' + __dirname + '/../starter.html');
+  */
 
+  mainWindow = new BrowserWindow({
+    width: 720,
+    height: 500,
+    //transparent: true,
+    //fullscreen: false,
+    //frame: false
+  });
+  mainWindow.loadUrl('file://' + __dirname + '/../index.html');
+  /*
   starterWindow.on('start.capture', function () {
+
     mainWindow = new BrowserWindow({
       width: 10,
       height: 10,
@@ -40,5 +53,6 @@ app.on('ready', function() {
   starterWindow.on('stop.capture', function () {
     mainWindow && mainWindow.emit('stop');
   });
+  */
 });
 

@@ -18,7 +18,9 @@ var menuCreator = {
       submenu: [{
         label: 'Start',
         accelerator: 'Command+Z',
-        click: function () {}
+        click: function () {
+          app.emit('start');
+        }
       }, { 
         label: 'Test tweet',
         accelerator: 'Command+T',

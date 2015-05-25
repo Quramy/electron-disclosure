@@ -1,1 +1,42 @@
-<div ng-controller="MainController as main"></div>
+<div ng-controller="MainController as main" class="app-container">
+  {{main.hasToken}}
+
+  <div ng-if="!main.isLoding">
+    <div class="app-controll">
+      <div class="menu-item">
+        <a href="" class="icon icon-status" ng-click="main.cancel ? main.stop() : main.start()" ng-class="{on: main.cancel, off:!main.cancel}">
+          <span class="fa fa-power-off"></span>
+        </a>
+      </div>
+      <div class="menu-item">
+        <a href="" class="icon icon-camera" ng-click="main.capture()">
+          <span class="fa fa-camera"></span>
+        </a>
+        <div class="menu-description">
+          <p>capture desktop</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        <label><input type="checkbox" ng-model="main.enableTweet"><div class="icon icon-twitter"><span class="fa fa-twitter"></span></div></label>
+        <div class="account">
+        <!--
+          <img ng-attr-src="{{main.account.settings().profile_image_url}}" ng-if="main.hasToken">
+        -->
+          <span >{{main.account.settings().screen_name}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="slider-container">
+      <ul class="image-group">
+        <a href="" class="image-content" ng-repeat="image in main.imageList">
+          <li class="image-item">
+          <img ng-attr-src="{{::image.url()}}" />
+          </li>
+        </a>
+      </ul>
+    </div>
+  </div>
+  <div ng-if="main.isLoding">
+    Loding...
+  </div>
+</div>

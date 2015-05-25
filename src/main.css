@@ -1,0 +1,149 @@
+/* reset */
+a, a:hover, a:visited, a:active, a:focus, button {
+  cursor: pointer;
+}
+
+label, input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* base */
+body {
+  -webkit-user-select: none;
+  color: #808080;
+  background-color: #444;
+}
+
+/* layout */
+.app-container {
+  left: 0;
+  right: 0;
+  position: relative;
+}
+
+.app-controll {
+  background-color: #222;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 60px;
+  padding: 5px;
+}
+
+.slider-container {
+  padding-top: 50px;
+  width: 100%;
+  overflow-x: scroll;
+}
+
+
+/* component */
+
+.menu-item {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0 20px 0 20px;
+  height: 50px;
+}
+
+.menu-item input[type="checkbox"] {
+  display: none;
+}
+
+.icon {
+  transition:0.2s linear all;
+  font-size: 45px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.icon:hover {
+  color: #fff;
+}
+
+.menu-description {
+  display: none;
+  position: fixed;
+}
+
+.icon:hover+.menu-description {
+  z-index: 100;
+  display: block;
+}
+
+.icon-status.on {
+  color: #f02000;
+}
+
+.icon-camera {
+  color: #808080;
+}
+
+.icon-camera:hover:active {
+  transition:0.2s linear all;
+  color: #f02000;
+}
+
+input:checked+.icon.icon-twitter {
+  color: #f02000;
+}
+
+
+.button {
+  background-color: #ffa033;
+  color: #fff;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+.image-content {
+}
+
+.image-item {
+  height: 400px;
+  padding: 20px;
+  list-style: none;
+  display: inline-block;
+}
+
+.image-group {
+  padding-top: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 30px;
+  text-align: center;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+.image-item.ng-enter {
+  transition:0.3s linear all;
+  opacity: 0;
+}
+.image-item.ng-enter.ng-enter-active {
+  opacity: 1.0;
+}
+
+.image-item img {
+  transition:0.1s linear all;
+  height: 70%;
+}
+
+.image-content:hover .image-item img {
+  height: 100%;
+}
+
+.account {
+  margin-left: 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.account  img {
+  margin-top: 7px;
+  width: 32px;
+  height: 32px;
+}
+
+
