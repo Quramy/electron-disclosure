@@ -84,7 +84,6 @@ var auth = {
               fs.writeFileSync(CACHE_FILE, JSON.stringify(_token), 'utf8');
               typeof cb === 'function' && cb(null, _token);
               setTimeout(function () {loginWindow.close();}, 0);
-              preventDefault();
               return;
             });
           }

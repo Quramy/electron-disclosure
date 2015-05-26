@@ -16,7 +16,7 @@ angular.module('renderer').factory('capture', function ($rootElement, $rootScope
       dfrd.resolve(canvas[0]);
     }else{
       video = angular.element('<video>');
-      video.css('display', 'none');
+      //video.css('display', 'none');
       video.attr('width', _size.width + 'px');
       video.attr('height', _size.height+ 'px');
       $rootElement.append(video);

@@ -1,6 +1,4 @@
 <div ng-controller="MainController as main" class="app-container">
-  {{main.hasToken}}
-
   <div ng-if="!main.isLoding">
     <div class="app-controll">
       <div class="menu-item">
@@ -17,16 +15,20 @@
         </div>
       </div>
       <div class="menu-item">
-        <label><input type="checkbox" ng-model="main.enableTweet"><div class="icon icon-twitter"><span class="fa fa-twitter"></span></div></label>
+        <label>
+          <input type="checkbox" ng-model="main.enableTweet" ng-change="main.toggleTweet()">
+          <div class="icon icon-twitter"><span class="fa fa-twitter"></span></div>
+        </label>
         <div class="account">
         <!--
           <img ng-attr-src="{{main.account.settings().profile_image_url}}" ng-if="main.hasToken">
         -->
-          <span >{{main.account.settings().screen_name}}</span>
+          <span ng-if="main.hasToken">{{main.account.settings().screen_name}}</span>
+          <span ng-if="!main.hasToken">Sign in</span>
         </div>
       </div>
     </div>
-    <div class="slider-container">
+    <div class="slider-container" scroll-spy>
       <ul class="image-group">
         <a href="" class="image-content" ng-repeat="image in main.imageList">
           <li class="image-item">
@@ -39,4 +41,5 @@
   <div ng-if="main.isLoding">
     Loding...
   </div>
+
 </div>

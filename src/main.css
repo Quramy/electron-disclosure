@@ -128,11 +128,19 @@ input:checked+.icon.icon-twitter {
 
 .image-item img {
   transition:0.1s linear all;
-  height: 70%;
+  height: 100%;
 }
 
+
+/*
 .image-content:hover .image-item img {
   height: 100%;
+}
+*/
+
+video {
+  position: absolute;
+  left: -5000px;
 }
 
 .account {
