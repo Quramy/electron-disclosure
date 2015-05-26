@@ -74,7 +74,11 @@ angular.module('renderer').controller('MainController', function ($interval, twi
     main.cancel = null;
   };
 
-  remote.getCurrentWindow().on('start', main.start);
+  remote.getCurrentWindow().on('capture', main.capture);
+  remote.getCurrentWindow().on('start', function () {
+    if(main.hasToken) main.enableTweet = true;
+    main.start();
+  });
   remote.getCurrentWindow().on('stop', main.stop);
 
   main.twitter.hasToken().then(function() {

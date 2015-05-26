@@ -6,6 +6,7 @@ var Menu = require('menu');
 var menuTmpl = require('./menuTmpl');
 var template = menuTmpl.appMenu();
 var mainWindow = null;
+var appMenu = null;
 
 if(process.env.NODE_ENV === 'develop'){
   require('crash-reporter').start();
@@ -16,43 +17,26 @@ app.on('window-all-closed', function() {
   if (process.platform != 'darwin') app.quit();
 });
 
-app.on('ready', function() {
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+app.on('capture', function () {
+  if(mainWindow) mainWindow.emit('capture');
+});
 
-  /*
-  var starterWindow = new BrowserWindow({
-    width: 400,
-    height: 250
-  });
-  starterWindow.loadUrl('file://' + __dirname + '/../starter.html');
-  */
+app.on('start', function () {
+  if(mainWindow) mainWindow.emit('start');
+});
+
+app.on('stop', function () {
+  if(mainWindow) mainWindow.emit('stop');
+});
+
+app.on('ready', function() {
+  appMenu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(appMenu);
 
   mainWindow = new BrowserWindow({
     width: 720,
-    height: 600,
-    //transparent: true,
-    //fullscreen: false,
-    //frame: false
+    height: 600
   });
   mainWindow.loadUrl('file://' + __dirname + '/../index.html');
-  /*
-  starterWindow.on('start.capture', function () {
-
-    mainWindow = new BrowserWindow({
-      width: 10,
-      height: 10,
-      transparent: true,
-      fullscreen: false,
-      frame: false
-    });
-    mainWindow.loadUrl('file://' + __dirname + '/../index.html');
-    mainWindow.on('closed', function() {
-      mainWindow = null;
-    });
-  });
-  starterWindow.on('stop.capture', function () {
-    mainWindow && mainWindow.emit('stop');
-  });
-  */
 });
 

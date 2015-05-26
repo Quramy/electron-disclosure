@@ -4,6 +4,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 var confirmLogin = require('./confirmLogin');
 
+var isStarted = false;
 var menuCreator = {
   appMenu: function () {
     return [{
@@ -18,23 +19,23 @@ var menuCreator = {
       submenu: [{
         label: 'Start',
         accelerator: 'Command+Z',
-        click: function () {
-          app.emit('start');
+        click: function (menu) {
+          if(isStarted) {
+            isStarted = false;
+            menu.label = 'Start';
+            app.emit('stop');
+          }else{
+            isStarted = true;
+            menu.label = 'Stop';
+            app.emit('start');
+          }
         }
-      }, { 
-        label: 'Test tweet',
+      }, {
+        label: 'Capture',
         accelerator: 'Command+T',
-        click: function() { 
-          /*
-          var w = BrowserWindow.getFocusedWindow();
-
-          w && setTimeout(function () {
-            w.emit('capture');
-          }, 3000);*/
-          confirmLogin(function (res) {
-            app.emit('start.capture');
-          });
-        } 
+        click: function () {
+          app.emit('capture');
+        }
       }]
     }];
   },
