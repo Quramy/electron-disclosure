@@ -12,13 +12,17 @@ body {
   -webkit-user-select: none;
   color: #808080;
   background-color: #444;
+  width: 100%;
+  height: 100%;
 }
 
 /* layout */
 .app-container {
   left: 0;
   right: 0;
+  top: 0;
   position: relative;
+  bottom: 0;
 }
 
 .app-controll {
@@ -29,6 +33,8 @@ body {
   top: 0;
   height: 60px;
   padding: 5px;
+  white-space: nowrap;
+  z-index: 10;
 }
 
 .slider-container {
@@ -91,7 +97,6 @@ input:checked+.icon.icon-twitter {
   color: #f02000;
 }
 
-
 .button {
   background-color: #ffa033;
   color: #fff;
@@ -104,9 +109,12 @@ input:checked+.icon.icon-twitter {
 
 .image-item {
   height: 400px;
-  padding: 20px;
+  padding: 15px;
   list-style: none;
   display: inline-block;
+  position: relative;
+  margin-bottom: 75px;
+  -webkit-box-reflect: below 5px -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, .5)), color-stop(0.2, transparent), to(transparent));
 }
 
 .image-group {
@@ -144,7 +152,7 @@ video {
 }
 
 .account {
-  margin-left: 15px;
+  margin-left: 3px;
   display: inline-block;
   vertical-align: middle;
 }
@@ -152,6 +160,11 @@ video {
   margin-top: 7px;
   width: 32px;
   height: 32px;
+}
+
+.account-screen-name {
+  display: inline-block;
+  margin-top: 25px;
 }
 
 

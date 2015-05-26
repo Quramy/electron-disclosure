@@ -3,15 +3,18 @@
 angular.module('renderer').directive('scrollSpy', function () {
   return {
     restrict: 'A',
-    link: function ($scope, $elem) {
-      $elem.on('scroll', function () {
-        /*
-        var i = document.elementFromPoint(300, 200);
-        var $image = angular.element(i).parents('.image-item');
-        $image.find('img').css('width', '120%');
-        $image.next().css('width', '100%');
-        $image.prev().css('width', '100%');
-       */
+    link: function ($scope, $elem, $attrs) {
+      $scope.$watchCollection($attrs.scrollSpy, function () {
+        $scope.$evalAsync(function () {
+          var s = $elem.find('>*:first'), e = $elem.find('>*:last');
+          if(!s.length || !e.length) return;
+          console.log(e.position(), s.position());
+          var target = e.position().left - s.position().left;
+          console.log(target);
+          $elem.parent().animate({
+            scrollLeft: target
+          });
+        });
       });
     }
   }

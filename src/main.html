@@ -23,13 +23,13 @@
         <!--
           <img ng-attr-src="{{main.account.settings().profile_image_url}}" ng-if="main.hasToken">
         -->
-          <span ng-if="main.hasToken">{{main.account.settings().screen_name}}</span>
-          <span ng-if="!main.hasToken">Sign in</span>
+          <span ng-if="main.hasToken" class="account-screen-name">{{main.account.settings().screen_name}}</span>
+          <span ng-if="!main.hasToken" class="account-screen-name">Sign in</span>
         </div>
       </div>
     </div>
-    <div class="slider-container" scroll-spy>
-      <ul class="image-group">
+    <div class="slider-container">
+      <ul class="image-group" scroll-spy="main.imageList">
         <a href="" class="image-content" ng-repeat="image in main.imageList">
           <li class="image-item">
           <img ng-attr-src="{{::image.url()}}" />

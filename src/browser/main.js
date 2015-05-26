@@ -29,7 +29,7 @@ app.on('ready', function() {
 
   mainWindow = new BrowserWindow({
     width: 720,
-    height: 500,
+    height: 600,
     //transparent: true,
     //fullscreen: false,
     //frame: false
