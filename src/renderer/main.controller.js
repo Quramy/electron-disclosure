@@ -33,10 +33,11 @@ angular.module('renderer').controller('MainController', function ($interval, twi
     });
   };*/
 
+  var screen = remote.require('screen');
+  var dispSize = screen.getPrimaryDisplay().size;
+  console.log('Screen width: ' + dispSize.width + ', height: ' + dispSize.height);
+  capture.setSize({width: dispSize.width * 0.5, height: dispSize.height * 0.5});
   main.capture = function () {
-    var screen = remote.require('screen');
-    var dispSize = screen.getPrimaryDisplay().size;
-    capture.setSize({width: dispSize.width * 0.5, height: dispSize.height * 0.5});
     var imgPromise = capture.getImage().then(function (image) {
       main.imageList.push(image);
       return image.base64();

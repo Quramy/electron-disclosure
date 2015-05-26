@@ -45,11 +45,11 @@ angular.module('renderer').factory('capture', function ($rootElement, $rootScope
           context.drawImage(videoDom, 0, 0, canvas[0].width, canvas[0].height);
           dfrd.resolve(canvas[0]);
           //video.remove();
-        }, 50);
+        }, 200);
       }, function (error) {
         console.error(error);
         dfrd.reject(error);
-        video.remove();
+        //video.remove();
       });
     }
     return dfrd.promise;
