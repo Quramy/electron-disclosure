@@ -49,11 +49,13 @@ angular.module('renderer').controller('MainController', function ($interval, twi
       }).then(function (res) {
         var d = new Date();
         console.log('Upload media: ', res.media_id_string);
-        return twitter.statuesUpdate({status: 'Captured my desktop at ' + d.toGMTString(), media_ids:res.media_id_string});
+        return twitter.statuesUpdate({status: 'Captured by https://github.com/Quramy/electron-disclosure at ' + d.toGMTString(), media_ids:res.media_id_string});
       }).then(function (data) {
-        console.log('Updated status: ', data.id_str);
-        var link = 'https://twitter.com';
-        new Notification('Tweet done. https://');
+        var link = 'https://twitter.com/' + account.settings().name + '/status/' + data.id_str;
+        var n = new Notification('Tweet done. ' + link,{});
+        n.onclick = function () {
+          console.log(link);
+        };
       });
     }
   };
