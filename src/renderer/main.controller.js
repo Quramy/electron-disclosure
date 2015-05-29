@@ -3,6 +3,7 @@
 angular.module('renderer').controller('MainController', function ($interval, twitter, account, capture) {
   var main = this;
   var remote = require('remote');
+  var shell = require('shell');
   main.imageList = [];
   main.twitter = twitter;
   main.account = account;
@@ -52,9 +53,11 @@ angular.module('renderer').controller('MainController', function ($interval, twi
         return twitter.statuesUpdate({status: 'Captured by https://github.com/Quramy/electron-disclosure at ' + d.toGMTString(), media_ids:res.media_id_string});
       }).then(function (data) {
         var link = 'https://twitter.com/' + account.settings().name + '/status/' + data.id_str;
-        var n = new Notification('Tweet done. ' + link,{});
+        var n = new Notification('Tweet done. ', {
+          body: link,
+        });
         n.onclick = function () {
-          console.log(link);
+          shell.openExternal(link);
         };
       });
     }

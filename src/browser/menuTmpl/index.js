@@ -8,7 +8,7 @@ var isStarted = false;
 var menuCreator = {
   appMenu: function () {
     return [{
-      label: 'captbot',
+      label: 'Disclosure',
       submenu: [{
         label: 'Quit',
         accelerator: 'Command+Q',
