@@ -4,29 +4,18 @@
 <meta charset="UTF-8">
 <title>Disclosure</title>
 <!-- inject:css -->
-<link rel="stylesheet" href="../bower_components/sanitize-css/dist/sanitize.css">
-<link rel="stylesheet" href="main.css">
 <!-- endinject -->
 <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
 </head>
 <body>
-<div ng-include="'main.html'"></div>
-<!-- build:js -->
-<script>window.jQuery = window.$ = require('../bower_components/jquery/dist/jquery.js');</script>
-<!-- inject:js -->
-<script src="../bower_components/angularjs/angular.js"></script>
-<script src="../bower_components/lodash/lodash.js"></script>
-<script src="../bower_components/angular/angular.js"></script>
-<script src="../bower_components/angular-animate/angular-animate.js"></script>
-<script src="renderer/index.js"></script>
-<script src="renderer/account.service.js"></script>
-<script src="renderer/capture.service.js"></script>
-<script src="renderer/main.controller.js"></script>
-<script src="renderer/scrollSpy.directive.js"></script>
-<script src="renderer/starter.controller.js"></script>
-<script src="renderer/timeline.service.js"></script>
-<script src="renderer/twitter.service.js"></script>
-<!-- endinject -->
-<!-- endbulid -->
+<div id="container"></div>
+<video id="video" class="hidden"></video>
+<script>
+require("babel/polyfill");
+var React = require('react');
+var Main = require('./renderer/main.js').Main;
+var container = document.getElementById("container");
+React.render(React.createElement(Main), container);
+</script>
 </body>
 </html>

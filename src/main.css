@@ -154,7 +154,7 @@ input:checked+.icon-twitter {
   height: 100%;
 }
 
-video {
+video.hidden {
   position: absolute;
   left: -5000px;
 }

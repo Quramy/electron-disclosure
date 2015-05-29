@@ -8,7 +8,10 @@ It captures your desktop by 5 minutes and posts tweet with the captured images.
 ## Run
 
 ```sh
-npm install -g electron-prebuilt
+npm install -g electron-prebuilt bower
 cd electron-disclosure
+npm install
+bower install
+gulp build
 npm start
 ```

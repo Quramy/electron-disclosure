@@ -1,5 +1,5 @@
 'use strict';
-
+require('babel/polyfill');
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var Menu = require('menu');
