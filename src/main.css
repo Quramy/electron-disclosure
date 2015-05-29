@@ -14,6 +14,7 @@ body {
   background-color: #444;
   width: 100%;
   height: 100%;
+  font-family:  "Hiragino Kaku Gothic ProN", "游ゴシック", YuGothic, Meiryo, sans-serif;
 }
 
 /* layout */
@@ -48,6 +49,7 @@ body {
 
 .menu-item {
   display: inline-block;
+  position: relative;
   text-align: center;
   vertical-align: middle;
   padding: 0 20px 0 20px;
@@ -64,20 +66,33 @@ body {
   display: inline-block;
   text-align: center;
   vertical-align: middle;
+  z-index: 30;
 }
 
 .icon:hover {
   color: #fff;
 }
 
-.menu-description {
-  display: none;
-  position: fixed;
+.icon+.menu-description {
+  transition:0.2s linear all;
+  font-size: 12px;
+  display: block;
+  background-color: #222;
+  z-index: 0;
+  opacity: 0;
+  position: absolute;
+  border-width: 0 2000px 0 2000px;
+  border-style: solid;
+  border-color: #222;
+  box-sizing: content-box;
+  top: 50px;
+  padding: 0 20px 0 20px;
+  left: 0;
+  margin-left: -2000px;
 }
 
 .icon:hover+.menu-description {
-  z-index: 100;
-  display: block;
+  opacity: 1.0;
 }
 
 .icon-status.on {
@@ -93,7 +108,7 @@ body {
   color: #f02000;
 }
 
-input:checked+.icon.icon-twitter {
+input:checked+.icon-twitter {
   color: #f02000;
 }
 
@@ -127,7 +142,7 @@ input:checked+.icon.icon-twitter {
   white-space: nowrap;
 }
 .image-item.ng-enter {
-  transition:0.3s linear all;
+  transition:1.0s linear all;
   opacity: 0;
 }
 .image-item.ng-enter.ng-enter-active {
@@ -138,13 +153,6 @@ input:checked+.icon.icon-twitter {
   transition:0.1s linear all;
   height: 100%;
 }
-
-
-/*
-.image-content:hover .image-item img {
-  height: 100%;
-}
-*/
 
 video {
   position: absolute;
@@ -166,5 +174,4 @@ video {
   display: inline-block;
   margin-top: 25px;
 }
-
 

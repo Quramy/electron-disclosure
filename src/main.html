@@ -5,20 +5,26 @@
         <a href="" class="icon icon-status" ng-click="main.cancel ? main.stop() : main.start()" ng-class="{on: main.cancel, off:!main.cancel}">
           <span class="fa fa-power-off"></span>
         </a>
+        <div class="menu-description">
+          <p>Start Capture</p>
+        </div>
       </div>
       <div class="menu-item">
         <a href="" class="icon icon-camera" ng-click="main.capture()">
           <span class="fa fa-camera"></span>
         </a>
         <div class="menu-description">
-          <p>capture desktop</p>
+          <p>One-time Capture</p>
         </div>
       </div>
       <div class="menu-item">
-        <label>
-          <input type="checkbox" ng-model="main.enableTweet" ng-change="main.toggleTweet()">
-          <div class="icon icon-twitter"><span class="fa fa-twitter"></span></div>
+        <input type="checkbox" id="toggleTweet" ng-model="main.enableTweet" ng-change="main.toggleTweet()">
+        <label class="icon icon-twitter" for="toggleTweet">
+          <span class="fa fa-twitter"></span>
         </label>
+        <div class="menu-description">
+          <p>Tweet when captured</p>
+        </div>
         <div class="account">
         <!--
           <img ng-attr-src="{{main.account.settings().profile_image_url}}" ng-if="main.hasToken">
