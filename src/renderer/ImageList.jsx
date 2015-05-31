@@ -17,7 +17,9 @@ export class ImageList extends React.Component {
       let container = React.findDOMNode(this);
       let lastChild = container.querySelector('.image-group>a:last-child');
       if(!lastChild) return;
-      let [start, end, delta] = [container.scrollLeft, lastChild.offsetLeft, (end - start) / 10];
+      let start = container.scrollLeft;
+      let end =  lastChild.offsetLeft;
+      let delta =  (end - start) / 10.0;
       let pre;
       let timer = new Timer(() => {
         if(container.scrollLeft <=  end && container.scrollLeft !== pre) {
