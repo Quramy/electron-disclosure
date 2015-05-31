@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import {Timer} from './timer';
 
 export class ImageList extends React.Component {
   constructor () {
@@ -8,16 +9,33 @@ export class ImageList extends React.Component {
     this.propTypes = {
       list: React.PropTypes.array
     };
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
   }
   componentDidUpdate () {
-    console.log(this.props.list.length);
+    if(this.props.list && this.props.list.length) {
+      // animate scrollLeft to last-item
+      let container = React.findDOMNode(this);
+      let lastChild = container.querySelector('.image-group>a:last-child');
+      if(!lastChild) return;
+      let [start, end, delta] = [container.scrollLeft, lastChild.offsetLeft, (end - start) / 10];
+      let pre;
+      let timer = new Timer(() => {
+        if(container.scrollLeft <=  end && container.scrollLeft !== pre) {
+          pre = container.scrollLeft;
+          container.scrollLeft += delta;
+        }else{
+          timer.cancel();
+        }
+      }, 40);
+      timer.start();
+    }
   }
   render() {
-    let imageList = this.props.list && this.props.list.map((url) => {
+    let imageList = this.props.list && this.props.list.map((item) => {
       return (
-        <a href="" className="image-content">
-          <li className="image-item">
-          <img src={url} />
+        <a className="image-content">
+          <li key={item.key} className="image-item">
+          <img src={item.url} />
           </li>
         </a>
       );

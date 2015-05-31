@@ -11,6 +11,7 @@ export var init = (size, scale) => {
   [_size, _scale] = [size, scale];
   video.width = (size.width || 800) * scale;
   video.height = (size.height || 600) * scale;
+  console.log(_size);
 
   return new Promise((resolve, reject) => {
     navigator.webkitGetUserMedia({

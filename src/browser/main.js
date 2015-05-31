@@ -1,36 +1,32 @@
 'use strict';
 require('babel/polyfill');
-var app = require('app');
-var BrowserWindow = require('browser-window');
-var Menu = require('menu');
-var menuTmpl = require('./menuTmpl');
-var template = menuTmpl.appMenu();
-var mainWindow = null;
-var appMenu = null;
 
+import app from 'app';
+import BrowserWindow from 'browser-window';
+import Menu from 'menu';
+import MenuItem from 'menu-item';
+import crashReporter from 'crash-reporter';
+import appMenu from './menu/appMenu';
+
+let mainWindow = null;
 if(process.env.NODE_ENV === 'develop'){
-  require('crash-reporter').start();
-  template = template.concat(menuTmpl.devAssistMenu());
+  crashReporter.start();
+  appMenu.append(require('./menu/submenus/development'));
 }
 
-app.on('window-all-closed', function() {
-  if (process.platform != 'darwin') app.quit();
+app.on('window-all-closed', () => {
+  app.quit();
 });
 
-app.on('capture', function () {
-  if(mainWindow) mainWindow.emit('capture');
-});
-
-app.on('start', function () {
+app.on('start', () => {
   if(mainWindow) mainWindow.emit('start');
 });
 
-app.on('stop', function () {
+app.on('stop', () => {
   if(mainWindow) mainWindow.emit('stop');
 });
 
-app.on('ready', function() {
-  appMenu = Menu.buildFromTemplate(template);
+app.on('ready', () => {
   Menu.setApplicationMenu(appMenu);
 
   mainWindow = new BrowserWindow({

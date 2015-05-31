@@ -1,9 +1,10 @@
-import React from 'react';
-import * as remote from 'remote';
-import * as shell from 'shell';
+import React from 'react/addons';
+import remote from 'remote';
+import shell from 'shell';
 import {init, Capture} from './capture';
 import {ImageList} from './imageList';
 import {Twitter} from './twitterWrapper';
+import {Timer} from './timer';
 
 let screen = remote.require('screen');
 
@@ -11,39 +12,58 @@ export class Main extends React.Component{
   constructor () {
     super();
     this.state = {
+      timerStatus: false,
       enableTweet: false,
       me: null,
       imageList: []
     };
+
+    // Binding event handlers
     this.capture = this.capture.bind(this);
     this.toggleTweet = this.toggleTweet.bind(this);
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+
     this.twitter = new Twitter();
     this.twitter.hasToken()
       .then(() => this.twitter.verifyCredentials())
       .then(me => this.setState({me: me}))
     ;
-    init(screen.getPrimaryDisplay().size, 0.5).then();
+
+    init(screen.getPrimaryDisplay().size, 0.5).then(()=>{
+      remote.getCurrentWindow().on('start', () => this.start());
+      remote.getCurrentWindow().on('stop', () => this.stop());
+    });
+    this.timer = new Timer(()=>{
+      this.capture();
+    }, 1000 * 60 * 5);
   }
   capture() {
     let capture = new Capture();
     let imageHolder = capture.getImage();
     let url = imageHolder.toDataURL();
     this.setState({
-      imageList: this.state.imageList.concat([url])
+      imageList: this.state.imageList.concat([{
+        key: new Date() - 0,
+        url: url
+      }])
     });
+
+    // upload captured image and tweet
     if(this.state.enableTweet) {
       this.twitter.mediaUpload({media: imageHolder.toDataString(), isBase64: true})
       .then(res => {
-        var d = new Date();
-        console.log('Upload media: ', res.media_id_string);
+        let d = new Date();
+        // console.log('Upload media: ', res.media_id_string);
         return this.twitter.statuesUpdate({
           status: 'Captured by https://github.com/Quramy/electron-disclosure at ' + d.toGMTString(),
           media_ids: res.media_id_string
         });
       })
       .then(data => {
-        var link = 'https://twitter.com/' + this.state.me.name + '/status/' + data.id_str;
-        var n = new Notification('Tweet done. ', {
+        // Notify with Notification API
+        let link = 'https://twitter.com/' + this.state.me.name + '/status/' + data.id_str;
+        let n = new Notification('Tweet done. ', {
           body: link,
         });
         n.onclick = function () {
@@ -51,6 +71,14 @@ export class Main extends React.Component{
         };
       });
     }
+  }
+  start() {
+    this.timer.start(2000);
+    this.setState({timerStatus: true});
+  }
+  stop() {
+    this.timer.cancel();
+    this.setState({timerStatus: false});
   }
   toggleTweet() {
     this.setState({
@@ -60,15 +88,16 @@ export class Main extends React.Component{
     });
   }
   render() {
+    let cx = React.addons.classSet;
     return (
       <div className="app-container">
         <div className="app-controll">
           <div className="menu-item">
-            <a className="icon icon-status" ng-click="main.cancel ? main.stop() : main.start()" ng-class="{on: main.cancel, off:!main.cancel}">
+            <a onClick={this.state.timerStatus ? this.stop : this.start} className={cx({icon: true, 'icon-status': true, on: this.state.timerStatus, off: !this.state.timerStatus})}>
               <span className="fa fa-power-off"></span>
             </a>
             <div className="menu-description">
-              <p>Start Capture</p>
+              <p>{this.state.timerStatus ? 'Stop capture' : 'Start to capture by 5 minutes'}</p>
             </div>
           </div>
           <div className="menu-item">

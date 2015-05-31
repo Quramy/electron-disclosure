@@ -31,7 +31,9 @@ gulp.task('clean', function (done) {
 gulp.task('compile', function () {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
     .pipe(plumber())
-    .pipe(babel())
+    .pipe(babel({
+      stage: 1
+    }))
     .pipe(gulp.dest('dist'))
   ;
 });
