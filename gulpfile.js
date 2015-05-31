@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var gulp = require('gulp');
 var inject = require('gulp-inject');
 var babel = require('gulp-babel');
@@ -9,9 +10,11 @@ var useref = require('gulp-useref');
 var minifyCss = require('gulp-minify-css');
 var flatten = require('gulp-flatten');
 var electron = require('gulp-electron');
+var asar = require('gulp-asar');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
+var helper = require('./tools');
 
 gulp.task('inject:css', function() {
   return gulp.src('src/*.html')
@@ -60,19 +63,25 @@ gulp.task('dependencies', function () {
   ;
 });
 
-gulp.task('package', ['dependencies', 'fonts', 'build'], function () {
-  return gulp.src('')
-    .pipe(electron({
-      src: './dist',
-      packageJson: packageJson,
-      release: './release',
-      cache: './cache',
-      version: 'v0.26.1',
-      packaging: true,
-      platforms: ['win32-ia32', 'darwin-x64']
-    }))
-    .pipe(gulp.dest(''))
-  ;
+gulp.task('package', ['dependencies', 'fonts', 'build', 'html'], function (done) {
+  var fs = require('fs');
+  var copied = _.cloneDeep(packageJson);
+  copied.main = copied.main.replace('dist/', '');
+  fs.writeFileSync('dist/package.json', JSON.stringify(copied));
+  helper({
+    release: './release',
+    appPrefix: 'Quramy',
+    appName: 'Disclosure',
+    version: '0.27.1'
+  }, function (platform, executablePath) {
+    if(platform === 'darwin') {
+      gulp.src('dist/**/*')
+      //.pipe(asar('app.asar'))
+      .pipe(gulp.dest(executablePath + '/Contents/Resources/app'))
+      ;
+    }
+    done();
+  });
 });
 
 gulp.task('watch', function () {

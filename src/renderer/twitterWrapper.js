@@ -1,6 +1,6 @@
 'use strict';
 
-import * as remote from 'remote';
+import remote from 'remote';
 
 let promisify = (fn) => {
   return new Promise((resolve, reject) => {

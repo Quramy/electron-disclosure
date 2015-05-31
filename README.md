@@ -15,3 +15,23 @@ cd electron-disclosure
 npm install
 npm start
 ```
+
+## Watch
+
+```sh
+gulp serve
+```
+
+## Enable develop menu
+
+Execute the following command, so you can use develop menu(Reload and Toggle dev tools) in the reneder process.
+
+```sh
+export NODE_ENV=develop
+```
+
+## Packaging
+
+```sh
+gulp package
+```
