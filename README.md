@@ -13,7 +13,5 @@ It captures your desktop by 5 minutes and posts tweet with the captured images.
 npm install -g electron-prebuilt bower gulp
 cd electron-disclosure
 npm install
-bower install
-gulp build
 npm start
 ```

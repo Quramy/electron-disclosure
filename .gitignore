@@ -1,6 +1,8 @@
 *.swp
 *.swo
 dist/
+release/
+cache/
 node_modules/
 bower_components/
 qiita.md
