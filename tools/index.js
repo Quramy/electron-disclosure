@@ -1,21 +1,28 @@
 'use strict';
 
-var download = require('electron-download');
 var fs = require('fs');
 var path = require('path');
+var EventEmitter = require('events').EventEmitter;
+var download = require('electron-download');
 var extract = require('extract-zip');
 var plist = require('plist');
 var ncp = require('ncp');
 var del = require('del');
 var mkdirp = require('mkdirp');
 
-var platforms = ['darwin'];
-module.exports = function (options, cb) {
-  var version = options.version || '0.27.1';
-  var cacheDir = path.join(__dirname, 'cache');
-  var releasePath = options.release || path.join(__dirname, '../release');
-  var appName = options.appName || 'Electron';
+module.exports = function (options) {
+  var version = options.version;
+  var platforms = options.platforms || [];
+  var cacheDir = options.cacheDir || path.join(process.cwd(), 'cache');
+  var releasePath = options.release || path.join(process.cwd(), 'release');
+  var appName = options.appName || 'yourApp';
   var appPrefix = options.appPrefix || '';
+
+  var emitter = new EventEmitter();
+
+  if(!version) {
+    throw new Error('version is required.');
+  }
 
   var handlers = {};
   handlers.darwin = function (appPath) {
@@ -31,18 +38,47 @@ module.exports = function (options, cb) {
           fs.rename(path.join(rPath, 'Electron.app'), executablePath, function (error) {
             if(error) throw new Error(error);
             fs.writeFileSync(path.join(executablePath, 'Contents/Info.plist'), plist.build(InfoPlist));
-            typeof cb === 'function' && cb('darwin', executablePath);
+            emitter.emit('darwin', executablePath);
           });
         });
       });
     });
   };
 
-  handlers.win32 = function (){};
-  handlers.linux = function () {};
+  handlers.win32 = function (appPath) {
+    var rPath = path.join(releasePath, 'win32');
+    del(rPath, function () {
+      mkdirp(rPath, function (error) {
+        ncp(appPath, rPath, function (error) {
+          if(error) throw new Error(error);
+          var exePath = path.join(rPath, 'electron.exe');
+          fs.rename(exePath, path.join(rPath, appName + '.exe'), function (error) {
+            if(error) throw new Error(error);
+            emitter.emit('win32', rPath);
+          });
+        });
+      });
+    });
+  };
+
+  handlers.linux = function (appPath) {
+    var rPath = path.join(releasePath, 'linux');
+    del(rPath, function () {
+      mkdirp(rPath, function (error) {
+        ncp(appPath, rPath, function (error) {
+          if(error) throw new Error(error);
+          var exePath = path.join(rPath, 'electron');
+          fs.rename(exePath, path.join(rPath, appName), function (error) {
+            if(error) throw new Error(error);
+            emitter.emit('linux', rPath);
+          });
+        });
+      });
+    });
+  };
 
   platforms.forEach(function (platform) {
-    download({platform: 'darwin', version: version}, function (error, zipPath) {
+    download({platform: platform, version: version}, function (error, zipPath) {
       if(error){
         throw new Error(error);
       }
@@ -56,11 +92,16 @@ module.exports = function (options, cb) {
         }else{
           fd && fs.close(fd, function (error) {
             if(error) throw new Error(error);
+            if(!handlers[platform]) {
+              throw new Error('Invalid platform. ' + platform);
+            }
             handlers[platform](appPath);
           });
         }
       });
     });
   });
+
+  return emitter;
 };
 

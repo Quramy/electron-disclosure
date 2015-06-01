@@ -42,11 +42,11 @@ gulp.task('fonts', function () {
   ;
 });
 
-gulp.task('html', ['inject:css'], function () {
+gulp.task('html', ['inject:css', 'fonts'], function () {
   var assets = useref.assets();
   return gulp.src(['dist/**/*.html'])
     .pipe(assets)
-    .pipe(gulpif('*.css', minifyCss()))
+    //.pipe(gulpif('*.css', minifyCss()))
     .pipe(assets.restore())
     .pipe(useref())
     .pipe(gulp.dest('dist'))
@@ -63,25 +63,31 @@ gulp.task('dependencies', function () {
   ;
 });
 
-gulp.task('package', ['dependencies', 'fonts', 'build', 'html'], function (done) {
+gulp.task('package', ['dependencies', 'build', 'html'], function (done) {
   var fs = require('fs');
   var copied = _.cloneDeep(packageJson);
   copied.main = copied.main.replace('dist/', '');
   fs.writeFileSync('dist/package.json', JSON.stringify(copied));
   helper({
-    release: './release',
-    appPrefix: 'Quramy',
+    version: '0.27.1',
+    platforms: ['win32', 'darwin', 'linux'],
     appName: 'Disclosure',
-    version: '0.27.1'
-  }, function (platform, executablePath) {
-    if(platform === 'darwin') {
-      gulp.src('dist/**/*')
-      //.pipe(asar('app.asar'))
+    release: './release',
+    appPrefix: 'Quramy'
+  }).once('darwin', function (executablePath) {
+    gulp.src('dist/**/*')
       .pipe(gulp.dest(executablePath + '/Contents/Resources/app'))
-      ;
-    }
-    done();
-  });
+    ;
+  }).once('win32', function (executablePath) {
+    gulp.src('dist/**/*')
+      .pipe(gulp.dest(executablePath + '/resources/app'))
+    ;
+  }).once('linux', function (executablePath) {
+    gulp.src('dist/**/*')
+      .pipe(gulp.dest(executablePath + '/resources/app'))
+    ;
+  })
+  ;
 });
 
 gulp.task('watch', function () {
