@@ -6,13 +6,11 @@ var video = document.getElementById('video');
 let _size, _scale;
 
 var init = (size, scale) => {
-
   if(scale > 1.0) scale = 1.0;
   [_size, _scale] = [size, scale];
   video.width = (size.width || 800) * scale;
   video.height = (size.height || 600) * scale;
   console.log(_size);
-
   return new Promise((resolve, reject) => {
     navigator.webkitGetUserMedia({
       audio: false,

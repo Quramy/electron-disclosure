@@ -11,12 +11,8 @@
 <body>
 <div id="container"></div>
 <video id="video" class="hidden"></video>
-<script>
-require("babel/polyfill");
-var React = require('react');
-var Main = require('./renderer/main.js').Main;
-var container = document.getElementById("container");
-React.render(React.createElement(Main), container);
-</script>
+<!-- inject:bundle.js -->
+<script>require('./renderer/bootstrap');</script>
+<!-- endinject -->
 </body>
 </html>

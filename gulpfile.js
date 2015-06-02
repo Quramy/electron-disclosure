@@ -12,17 +12,24 @@ var minifyCss = require('gulp-minify-css');
 var flatten = require('gulp-flatten');
 var electron = require('gulp-electron');
 var asar = require('gulp-asar');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
 var helper = require('./tools');
+var ELECTRON_MODULES = require('./electron-modules.json');
+
+var serveDir    = '.serve';
+var distDir     = 'dist';
+var releaseDir  = 'release';
 
 gulp.task('inject:css', function() {
   return gulp.src('src/*.html')
     .pipe(inject(gulp.src(mainBowerFiles().concat(['styles/**/*.css'])), {
       relative: true
     }))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest(serveDir))
   ;
 });
 
@@ -34,43 +41,71 @@ gulp.task('compile', function () {
       stage: 0
     }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest(serveDir))
   ;
+});
+
+gulp.task('bundle:browser', ['compile'], function () {
+  var b = browserify({
+    entries: [serveDir + '/browser/main.js']
+  });
+  ELECTRON_MODULES.forEach(function(moduleName) {
+    b.exclude(moduleName);
+  });
+  return b.bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest(distDir + '/browser'));
+  ;
+});
+
+gulp.task('bundle:renderer', ['compile'], function () {
+  var b = browserify({
+    entries: [serveDir + '/renderer/bootstrap.js']
+  });
+  ELECTRON_MODULES.forEach(function (moduleName) {
+    b.exclude(moduleName);
+  });
+  return b.bundle()
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest(distDir + '/renderer'))
+  ;
+});
+
+gulp.task('packageJson', ['bundle:browser'], function (done) {
+  var fs = require('fs');
+  var copied = _.cloneDeep(packageJson);
+  copied.main = 'browser/bundle.js';
+  fs.writeFile('dist/package.json', JSON.stringify(copied), function () {
+    done();
+  });
 });
 
 gulp.task('fonts', function () {
-  return gulp.src(['bower_components/**/fonts/*.{eot,svg,ttf,woff,woff2,otf}'])
+  return gulp.src(['bower_components/**/fonts/*.{woff}'])
     .pipe(flatten())
-    .pipe(gulp.dest('dist/fonts'))
+    .pipe(gulp.dest(distDir + '/fonts'))
   ;
 });
 
-gulp.task('html', ['inject:css', 'fonts'], function () {
+gulp.task('html', ['inject:css', 'fonts', 'bundle:renderer'], function () {
   var assets = useref.assets();
-  return gulp.src(['dist/**/*.html'])
+  return gulp.src([serveDir + '/**/*.html'])
+    .pipe(inject(gulp.src(distDir + '/renderer/bundle.js'), {
+      starttag: '<!-- inject:bundle.js -->',
+      ignorePath: '../dist',
+      relative: true
+    }))
     .pipe(assets)
     //.pipe(gulpif('*.css', minifyCss()))
     .pipe(assets.restore())
     .pipe(useref())
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest(distDir))
   ;
 });
 
-gulp.task('dependencies', function () {
-  var deps = [];
-  for(var moduleName in packageJson.dependencies) {
-    deps.push('node_modules/{' + moduleName + ',.tmp}/**/*')
-  }
-  return gulp.src(deps)
-    .pipe(gulp.dest('dist/node_modules'))
-  ;
-});
+gulp.task('prepare.package', ['html', 'packageJson']);
 
-gulp.task('package', ['dependencies', 'build', 'html'], function (done) {
-  var fs = require('fs');
-  var copied = _.cloneDeep(packageJson);
-  copied.main = copied.main.replace('dist/', '');
-  fs.writeFileSync('dist/package.json', JSON.stringify(copied));
+gulp.task('package', ['prepare.package'], function (done) {
   helper({
     version: '0.27.1',
     platforms: ['win32', 'darwin', 'linux'],
@@ -104,7 +139,7 @@ gulp.task('build', ['inject:css', 'compile']);
 gulp.task('serve', ['build', 'watch']);
 
 gulp.task('clean', function (done) {
-  del(['dist', 'release'], function () {
+  del([serveDir, distDir, releaseDir], function () {
     done();
   });
 });

@@ -2,6 +2,7 @@
 *.swo
 dist/
 release/
+.serve/
 cache/
 node_modules/
 bower_components/

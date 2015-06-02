@@ -2,7 +2,7 @@
   "name": "electron-disclosure",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/browser/main.js",
+  "main": ".serve/browser/main.js",
   "scripts": {
     "build": "gulp",
     "start": "gulp;electron .",
@@ -13,6 +13,7 @@
   "author": "Quramy",
   "license": "ISC",
   "devDependencies": {
+    "browserify": "^10.2.3",
     "del": "^1.1.1",
     "electron-download": "^1.0.5",
     "extract-zip": "^1.0.3",
@@ -27,13 +28,14 @@
     "gulp-plumber": "^1.0.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-useref": "^1.2.0",
-    "lodash": "^3.9.3",
     "main-bower-files": "^2.8.0",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
-    "plist": "^1.1.0"
+    "plist": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "lodash": "^3.9.3",
     "babel": "^5.4.7",
     "classnames": "^2.1.2",
     "node-twitter-api": "^1.6.0",

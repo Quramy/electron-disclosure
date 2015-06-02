@@ -1,0 +1,21 @@
+[
+  "app",
+  "auto-updater",
+  "browser-window",
+  "content-tracing",
+  "dialog",
+  "global-shortcut",
+  "ipc",
+  "menu",
+  "menu-item",
+  "power-monitor",
+  "protocol",
+  "tray",
+  "remote",
+  "web-frame",
+  "clipboard",
+  "crash-reporter",
+  "native-image",
+  "screen",
+  "shell"
+  ]

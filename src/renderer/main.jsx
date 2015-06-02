@@ -1,6 +1,7 @@
 import React from 'react';
 import remote from 'remote';
 import shell from 'shell';
+import * as _ from 'lodash';
 import cx from 'classnames';
 import {Capture} from './capture';
 import {ImageList} from './imageList';
@@ -8,6 +9,12 @@ import {Twitter} from './twitterWrapper';
 import {Timer} from './timer';
 
 let screen = remote.require('screen');
+
+let bindAll = object => {
+  Object.getOwnPropertyNames(object.constructor.prototype)
+    .filter(key => typeof object[key] === 'function')
+    .forEach(methodName => {object[methodName].bind(object);console.log(methodName)});
+};
 
 export class Main extends React.Component{
   state = {
@@ -20,6 +27,7 @@ export class Main extends React.Component{
     super();
 
     // Binding event handlers
+    //bindAll(this);
     this.capture = this.capture.bind(this);
     this.toggleTweet = this.toggleTweet.bind(this);
     this.start = this.start.bind(this);
@@ -27,8 +35,8 @@ export class Main extends React.Component{
     this.initTwitter = this.initTwitter.bind(this);
     this.initCapture = this.initCapture.bind(this);
 
-    this.initTwitter();
     this.initCapture();
+    //this.initTwitter();
     this.timer = new Timer(()=>{
       this.capture();
     }, 1000 * 60 * 5);
