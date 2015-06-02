@@ -5,7 +5,7 @@ var video = document.getElementById('video');
 
 let _size, _scale;
 
-export var init = (size, scale) => {
+var init = (size, scale) => {
 
   if(scale > 1.0) scale = 1.0;
   [_size, _scale] = [size, scale];
@@ -54,6 +54,9 @@ class ImageHolder {
 }
 
 export class Capture {
+  static init(size, scale) {
+    init(size, scale);
+  }
   constructor () {}
   getImage() {
     if(!streamUrl) return;

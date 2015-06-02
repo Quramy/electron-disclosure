@@ -2,7 +2,7 @@ import React from 'react';
 import remote from 'remote';
 import shell from 'shell';
 import cx from 'classnames';
-import {initCapture, Capture} from './capture';
+import {Capture} from './capture';
 import {ImageList} from './imageList';
 import {Twitter} from './twitterWrapper';
 import {Timer} from './timer';
@@ -35,7 +35,7 @@ export class Main extends React.Component{
     }, 1000 * 60 * 5);
   }
   async initCapture() {
-    await initCapture(screen.getPrimaryDisplay().size, 0.5);
+    await Capture.init(screen.getPrimaryDisplay().size, 0.5);
     remote.getCurrentWindow().on('start', () => this.start());
     remote.getCurrentWindow().on('stop', () => this.stop());
   }
