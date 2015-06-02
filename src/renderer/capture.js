@@ -55,7 +55,7 @@ class ImageHolder {
 
 export class Capture {
   static init(size, scale) {
-    init(size, scale);
+    return init(size, scale);
   }
   constructor () {}
   getImage() {

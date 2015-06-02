@@ -29,15 +29,16 @@ export class Main extends React.Component{
 
     this.initTwitter();
     this.initCapture();
-
     this.timer = new Timer(()=>{
       this.capture();
     }, 1000 * 60 * 5);
   }
-  async initCapture() {
-    await Capture.init(screen.getPrimaryDisplay().size, 0.5);
-    remote.getCurrentWindow().on('start', () => this.start());
-    remote.getCurrentWindow().on('stop', () => this.stop());
+  initCapture() {
+    Capture.init(screen.getPrimaryDisplay().size, 0.5).then( () => {
+      remote.getCurrentWindow().on('start', () => this.start());
+      remote.getCurrentWindow().on('stop', () => this.stop());
+    });
+
   }
   async initTwitter() {
     this.twitter = new Twitter();
