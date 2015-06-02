@@ -1,7 +1,8 @@
-import React from 'react/addons';
+import React from 'react';
 import remote from 'remote';
 import shell from 'shell';
-import {init, Capture} from './capture';
+import cx from 'classnames';
+import {initCapture, Capture} from './capture';
 import {ImageList} from './imageList';
 import {Twitter} from './twitterWrapper';
 import {Timer} from './timer';
@@ -9,34 +10,40 @@ import {Timer} from './timer';
 let screen = remote.require('screen');
 
 export class Main extends React.Component{
+  state = {
+    timerStatus: false,
+    enableTweet: false,
+    me: null,
+    imageList: []
+  };
   constructor () {
     super();
-    this.state = {
-      timerStatus: false,
-      enableTweet: false,
-      me: null,
-      imageList: []
-    };
 
     // Binding event handlers
     this.capture = this.capture.bind(this);
     this.toggleTweet = this.toggleTweet.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
+    this.initTwitter = this.initTwitter.bind(this);
+    this.initCapture = this.initCapture.bind(this);
 
-    this.twitter = new Twitter();
-    this.twitter.hasToken()
-      .then(() => this.twitter.verifyCredentials())
-      .then(me => this.setState({me: me}))
-    ;
+    this.initTwitter();
+    this.initCapture();
 
-    init(screen.getPrimaryDisplay().size, 0.5).then(()=>{
-      remote.getCurrentWindow().on('start', () => this.start());
-      remote.getCurrentWindow().on('stop', () => this.stop());
-    });
     this.timer = new Timer(()=>{
       this.capture();
     }, 1000 * 60 * 5);
+  }
+  async initCapture() {
+    await initCapture(screen.getPrimaryDisplay().size, 0.5);
+    remote.getCurrentWindow().on('start', () => this.start());
+    remote.getCurrentWindow().on('stop', () => this.stop());
+  }
+  async initTwitter() {
+    this.twitter = new Twitter();
+    await this.twitter.hasToken();
+    let me = await this.twitter.verifyCredentials();
+    this.setState({me: me});
   }
   capture() {
     let capture = new Capture();
@@ -88,7 +95,6 @@ export class Main extends React.Component{
     });
   }
   render() {
-    let cx = React.addons.classSet;
     return (
       <div className="app-container">
         <div className="app-controll">

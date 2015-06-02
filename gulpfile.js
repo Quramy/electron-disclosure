@@ -29,7 +29,7 @@ gulp.task('compile', function () {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
     .pipe(plumber())
     .pipe(babel({
-      stage: 1
+      stage: 0
     }))
     .pipe(gulp.dest('dist'))
   ;
