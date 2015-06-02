@@ -16,16 +16,29 @@ var serveDir    = '.serve';
 var distDir     = 'dist';
 var releaseDir  = 'release';
 
-gulp.task('inject:css', function() {
+// Compile *.scss files with sourcemaps.
+gulp.task('compile:styles', function () {
+  return gulp.src(['src/styles/**/*.scss'])
+    .pipe($.sourcemaps.init())
+    .pipe($.sass())
+    .pipe($.sourcemaps.write('.'))
+    .pipe(gulp.dest(serveDir + '/styles'))
+    ;
+});
+
+// Inject *.css(compiled and depedent) files into *.html
+gulp.task('inject:css', ['compile:styles'], function() {
   return gulp.src('src/**/*.html')
-    .pipe($.inject(gulp.src(mainBowerFiles().concat(['styles/**/*.css'])), {
-      relative: true
+    .pipe($.inject(gulp.src(mainBowerFiles().concat([serveDir + '/styles/**/*.css'])), {
+      relative: true,
+      ignorePath: ['../.serve/']
     }))
     .pipe(gulp.dest(serveDir))
   ;
 });
 
-gulp.task('compile', function () {
+// Transform from ES6 fashion JSX files to ES5 JavaScript files
+gulp.task('compile:scripts', function () {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
@@ -37,46 +50,46 @@ gulp.task('compile', function () {
   ;
 });
 
-gulp.task('bundle:browser', ['compile'], function () {
-  var b = browserify({
-    entries: [serveDir + '/browser/app.js'],
-    detectGlobals: false
-  });
-  ELECTRON_MODULES.forEach(function(moduleName) {
-    b.exclude(moduleName);
-  });
-  return b.bundle()
+// Browserify 2 bundle files(for BrowserProccess and for RendererProcess)
+[{
+  suffix: 'browser', 
+  entries: [serveDir + '/app.js'],
+  dest: distDir
+}, {
+  suffix: 'renderer',
+  entries: [serveDir + '/renderer/bootstrap.js'],
+  dest: distDir + '/renderer'
+}].forEach(function (it){
+  gulp.task('bundle:' + it.suffix, ['compile:scripts'], function () {
+    var b = browserify({
+      entries: it.entries,
+      detectGlobals: false
+    });
+    ELECTRON_MODULES.forEach(function(moduleName) {
+      // exclude built-in Electron modules (e.g. 'app', 'remote', etc...)
+      b.exclude(moduleName);
+    });
+    return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe($.uglify())
-    .pipe(gulp.dest(distDir + '/browser'));
-  ;
+    .pipe(gulp.dest(it.dest));
+    ;
+  });
 });
 
-gulp.task('bundle:renderer', ['compile'], function () {
-  var b = browserify({
-    entries: [serveDir + '/renderer/bootstrap.js']
-  });
-  ELECTRON_MODULES.forEach(function (moduleName) {
-    b.exclude(moduleName);
-  });
-  return b.bundle()
-    .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe($.uglify())
-    .pipe(gulp.dest(distDir + '/renderer'))
-  ;
-});
-
+// Replace 'main' property of package.json
 gulp.task('packageJson', ['bundle:browser'], function (done) {
   var fs = require('fs');
   var copied = _.cloneDeep(packageJson);
-  copied.main = 'browser/bundle.js';
+  copied.main = 'bundle.js';
   fs.writeFile('dist/package.json', JSON.stringify(copied), function () {
     done();
   });
 });
 
+// Copy font file. 
+// You don't need copy *.svg, *eot, *.ttf.
 gulp.task('fonts', function () {
   return gulp.src(['bower_components/**/fonts/*.woff'])
     .pipe($.flatten())
@@ -84,6 +97,7 @@ gulp.task('fonts', function () {
   ;
 });
 
+// Inject renderer bundle file and concatnate *.css files
 gulp.task('html', ['inject:css', 'fonts', 'bundle:renderer'], function () {
   var assets = $.useref.assets();
   return gulp.src([serveDir + '/**/*.html'])
@@ -102,6 +116,7 @@ gulp.task('html', ['inject:css', 'fonts', 'bundle:renderer'], function () {
 
 gulp.task('prepare.package', ['html', 'packageJson']);
 
+// Make app.asar and deploy it into application packages for each platforms.
 gulp.task('package', ['prepare.package'], function (done) {
   helper({
     version: '0.27.1',
@@ -111,27 +126,29 @@ gulp.task('package', ['prepare.package'], function (done) {
     appPrefix: 'Quramy'
   }).once('darwin', function (executablePath) {
     gulp.src('dist/**/*')
-      .pipe(gulp.dest(executablePath + '/Contents/Resources/app'))
+      .pipe($.asar('app.asar'))
+      .pipe(gulp.dest(executablePath + '/Contents/Resources'))
     ;
   }).once('win32', function (executablePath) {
     gulp.src('dist/**/*')
-      .pipe(gulp.dest(executablePath + '/resources/app'))
+      .pipe($.asar('app.asar'))
+      .pipe(gulp.dest(executablePath + '/resources'))
     ;
   }).once('linux', function (executablePath) {
     gulp.src('dist/**/*')
-      .pipe(gulp.dest(executablePath + '/resources/app'))
+      .pipe($.asar('app.asar'))
+      .pipe(gulp.dest(executablePath + '/resources'))
     ;
   })
   ;
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['src/**/*.jsx', 'src/**/*.js'], ['compile']);
-  gulp.watch(['styles/**/*.css'], ['inject:css']);
-  gulp.watch(['src/**/*.html'], ['inject:css']);
+  gulp.watch(['src/**/*.jsx', 'src/**/*.js'], ['compile:scripts']);
+  gulp.watch(['src/styles/**/*.scss'], ['inject:css']);
 });
 
-gulp.task('build', ['inject:css', 'compile']);
+gulp.task('build', ['inject:css', 'compile:scripts']);
 
 gulp.task('serve', ['build', 'watch']);
 
@@ -142,5 +159,4 @@ gulp.task('clean', function (done) {
 });
 
 gulp.task('default', ['build']);
-
 
