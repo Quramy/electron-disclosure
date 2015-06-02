@@ -2,23 +2,14 @@
 
 var _ = require('lodash');
 var gulp = require('gulp');
-var inject = require('gulp-inject');
-var babel = require('gulp-babel');
-var sourcemaps = require('gulp-sourcemaps');
-var plumber = require('gulp-plumber');
-var gulpif = require('gulp-if');
-var useref = require('gulp-useref');
-var uglify = require('gulp-uglify');
-var minifyCss = require('gulp-minify-css');
-var flatten = require('gulp-flatten');
-var asar = require('gulp-asar');
+var $ = require('gulp-load-plugins')();
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
-var helper = require('./tools');
+var helper = require('./tools/electron-package-helper');
 var ELECTRON_MODULES = require('./electron-modules.json');
 
 var serveDir    = '.serve';
@@ -27,7 +18,7 @@ var releaseDir  = 'release';
 
 gulp.task('inject:css', function() {
   return gulp.src('src/*.html')
-    .pipe(inject(gulp.src(mainBowerFiles().concat(['styles/**/*.css'])), {
+    .pipe($.inject(gulp.src(mainBowerFiles().concat(['styles/**/*.css'])), {
       relative: true
     }))
     .pipe(gulp.dest(serveDir))
@@ -36,12 +27,12 @@ gulp.task('inject:css', function() {
 
 gulp.task('compile', function () {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(babel({
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.babel({
       stage: 0
     }))
-    .pipe(sourcemaps.write('.'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest(serveDir))
   ;
 });
@@ -57,7 +48,7 @@ gulp.task('bundle:browser', ['compile'], function () {
   return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(uglify())
+    .pipe($.uglify())
     .pipe(gulp.dest(distDir + '/browser'));
   ;
 });
@@ -72,7 +63,7 @@ gulp.task('bundle:renderer', ['compile'], function () {
   return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(uglify())
+    .pipe($.uglify())
     .pipe(gulp.dest(distDir + '/renderer'))
   ;
 });
@@ -88,15 +79,15 @@ gulp.task('packageJson', ['bundle:browser'], function (done) {
 
 gulp.task('fonts', function () {
   return gulp.src(['bower_components/**/fonts/*.woff'])
-    .pipe(flatten())
+    .pipe($.flatten())
     .pipe(gulp.dest(distDir + '/fonts'))
   ;
 });
 
 gulp.task('html', ['inject:css', 'fonts', 'bundle:renderer'], function () {
-  var assets = useref.assets();
+  var assets = $.useref.assets();
   return gulp.src([serveDir + '/**/*.html'])
-    .pipe(inject(gulp.src(distDir + '/renderer/bundle.js'), {
+    .pipe($.inject(gulp.src(distDir + '/renderer/bundle.js'), {
       starttag: '<!-- inject:bundle.js -->',
       ignorePath: '../dist',
       relative: true
@@ -104,7 +95,7 @@ gulp.task('html', ['inject:css', 'fonts', 'bundle:renderer'], function () {
     .pipe(assets)
     //.pipe(gulpif('*.css', minifyCss()))
     .pipe(assets.restore())
-    .pipe(useref())
+    .pipe($.useref())
     .pipe(gulp.dest(distDir))
   ;
 });
