@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {Timer} from './timer';
+import {Timer} from '../timer';
 
 export class ImageList extends React.Component {
   constructor () {

@@ -39,7 +39,7 @@ gulp.task('compile', function () {
 
 gulp.task('bundle:browser', ['compile'], function () {
   var b = browserify({
-    entries: [serveDir + '/browser/main.js'],
+    entries: [serveDir + '/browser/app.js'],
     detectGlobals: false
   });
   ELECTRON_MODULES.forEach(function(moduleName) {

@@ -2,7 +2,7 @@
   "name": "electron-disclosure",
   "version": "1.0.0",
   "description": "",
-  "main": ".serve/browser/main.js",
+  "main": ".serve/browser/app.js",
   "scripts": {
     "build": "gulp",
     "start": "gulp;electron .",
