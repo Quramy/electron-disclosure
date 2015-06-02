@@ -8,12 +8,13 @@ var sourcemaps = require('gulp-sourcemaps');
 var plumber = require('gulp-plumber');
 var gulpif = require('gulp-if');
 var useref = require('gulp-useref');
+var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var flatten = require('gulp-flatten');
-var electron = require('gulp-electron');
 var asar = require('gulp-asar');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
@@ -47,13 +48,16 @@ gulp.task('compile', function () {
 
 gulp.task('bundle:browser', ['compile'], function () {
   var b = browserify({
-    entries: [serveDir + '/browser/main.js']
+    entries: [serveDir + '/browser/main.js'],
+    detectGlobals: false
   });
   ELECTRON_MODULES.forEach(function(moduleName) {
     b.exclude(moduleName);
   });
   return b.bundle()
     .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(gulp.dest(distDir + '/browser'));
   ;
 });
@@ -67,6 +71,8 @@ gulp.task('bundle:renderer', ['compile'], function () {
   });
   return b.bundle()
     .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(gulp.dest(distDir + '/renderer'))
   ;
 });
@@ -81,7 +87,7 @@ gulp.task('packageJson', ['bundle:browser'], function (done) {
 });
 
 gulp.task('fonts', function () {
-  return gulp.src(['bower_components/**/fonts/*.{woff}'])
+  return gulp.src(['bower_components/**/fonts/*.woff'])
     .pipe(flatten())
     .pipe(gulp.dest(distDir + '/fonts'))
   ;
