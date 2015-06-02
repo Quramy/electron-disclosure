@@ -7,11 +7,12 @@ import Menu from 'menu';
 import MenuItem from 'menu-item';
 import crashReporter from 'crash-reporter';
 import appMenu from './menu/appMenu';
+import devMenu from './menu/submenus/development';
 
 let mainWindow = null;
 if(process.env.NODE_ENV === 'develop'){
   crashReporter.start();
-  appMenu.append(require('./menu/submenus/development'));
+  appMenu.append(devMenu);
 }
 
 app.on('window-all-closed', () => {
@@ -33,6 +34,6 @@ app.on('ready', () => {
     width: 720,
     height: 600
   });
-  mainWindow.loadUrl('file://' + __dirname + '/../index.html');
+  mainWindow.loadUrl(`file://${__dirname}/../renderer/index.html`);
 });
 

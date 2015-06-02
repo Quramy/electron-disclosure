@@ -17,7 +17,7 @@ var distDir     = 'dist';
 var releaseDir  = 'release';
 
 gulp.task('inject:css', function() {
-  return gulp.src('src/*.html')
+  return gulp.src('src/**/*.html')
     .pipe($.inject(gulp.src(mainBowerFiles().concat(['styles/**/*.css'])), {
       relative: true
     }))

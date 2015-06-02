@@ -3,10 +3,10 @@ import remote from 'remote';
 import shell from 'shell';
 import * as _ from 'lodash';
 import cx from 'classnames';
-import {Capture} from '../capture';
 import {ImageList} from './imageList';
-import {Twitter} from '../twitterWrapper';
-import {Timer} from '../timer';
+import {Capture} from '../services/capture';
+import {Twitter} from '../services/twitterWrapper';
+import {Timer} from '../services/timer';
 
 let screen = remote.require('screen');
 
