@@ -25,6 +25,7 @@
     "gulp-inject": "^1.2.0",
     "gulp-minify-css": "^1.1.3",
     "gulp-plumber": "^1.0.1",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-useref": "^1.2.0",
     "lodash": "^3.9.3",
     "main-bower-files": "^2.8.0",

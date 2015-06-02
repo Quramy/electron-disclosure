@@ -4,6 +4,7 @@ var _ = require('lodash');
 var gulp = require('gulp');
 var inject = require('gulp-inject');
 var babel = require('gulp-babel');
+var sourcemaps = require('gulp-sourcemaps');
 var plumber = require('gulp-plumber');
 var gulpif = require('gulp-if');
 var useref = require('gulp-useref');
@@ -28,9 +29,11 @@ gulp.task('inject:css', function() {
 gulp.task('compile', function () {
   return gulp.src(['src/**/*.js', 'src/**/*.jsx'])
     .pipe(plumber())
+    .pipe(sourcemaps.init())
     .pipe(babel({
       stage: 0
     }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist'))
   ;
 });
