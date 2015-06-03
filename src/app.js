@@ -34,6 +34,10 @@ app.on('ready', () => {
     width: 720,
     height: 600
   });
-  mainWindow.loadUrl(`file://${__dirname}/index.html`);
+  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+
+  mainWindow.on('move', function () {
+    process.emit({type: 'dev:move', bounds: mainWindow.getBounds()});
+  });
 });
 

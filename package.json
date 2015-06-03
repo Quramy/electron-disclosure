@@ -5,7 +5,7 @@
   "main": ".serve/app.js",
   "scripts": {
     "build": "gulp",
-    "start": "gulp;electron .",
+    "start": "gulp serve",
     "install": "bower install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +16,7 @@
     "browserify": "^10.2.3",
     "del": "^1.1.1",
     "electron-download": "^1.0.5",
+    "electron-prebuilt": "^0.27.2",
     "extract-zip": "^1.0.3",
     "gulp": "^3.8.11",
     "gulp-asar": "0.0.2",

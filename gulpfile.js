@@ -9,6 +9,8 @@ var buffer = require('vinyl-buffer');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
+var electron = require('electron-prebuilt');
+var proc = require('child_process');
 var helper = require('./tools/electron-package-helper');
 var ELECTRON_MODULES = require('./electron-modules.json');
 
@@ -16,7 +18,7 @@ var serveDir    = '.serve';
 var distDir     = 'dist';
 var releaseDir  = 'release';
 
-// Compile *.scss files with sourcemaps.
+// Compile *.scss files with sourcemaps
 gulp.task('compile:styles', function () {
   return gulp.src(['src/styles/**/*.scss'])
     .pipe($.sourcemaps.init())
@@ -150,7 +152,21 @@ gulp.task('watch', function () {
 
 gulp.task('build', ['inject:css', 'compile:scripts']);
 
-gulp.task('serve', ['build', 'watch']);
+var electronProc;
+gulp.task('reload:browser', function () {
+  if(electronProc) {
+    electronProc.kill();
+  }
+  electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
+  electronProc.on('message', function (m) {
+    console.log(m);
+  });
+});
+
+gulp.task('serve', ['build', 'watch'], function () {
+  electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
+  gulp.watch([serveDir + '/app.js'], ['reload:browser']);
+});
 
 gulp.task('clean', function (done) {
   del([serveDir, distDir, releaseDir], function () {
