@@ -10,8 +10,6 @@ It captures your desktop by 5 minutes and posts tweet with the captured images.
 ## Run
 
 ```sh
-npm install -g electron-prebuilt bower gulp
-cd electron-disclosure
 npm install
 npm start
 ```
@@ -21,6 +19,11 @@ npm start
 ```sh
 gulp serve
 ```
+
+This task provides the following:
+
+* If files `*.scss`, `*.js` and `*.jsx`, re-compile them.
+* If files under `src/browser` change, restart Electron BrowserProcess(main process).
 
 ## Enable develop menu
 
@@ -35,3 +38,5 @@ export NODE_ENV=develop
 ```sh
 gulp package
 ```
+
+This task makes application distribution packages under the `./release` directory.

@@ -35,8 +35,8 @@ export class Main extends React.Component{
     this.initTwitter = this.initTwitter.bind(this);
     this.initCapture = this.initCapture.bind(this);
 
+    this.initTwitter();
     this.initCapture();
-    //this.initTwitter();
     this.timer = new Timer(()=>{
       this.capture();
     }, 1000 * 60 * 5);

@@ -16,7 +16,7 @@ let promisify = (fn) => {
 
 export class Twitter {
   constructor() {
-    this.client = remote.require('./twitter');
+    this.client = remote.require('./browser/twitter');
   }
   hasToken() {
     return promisify(this.client.getToken);

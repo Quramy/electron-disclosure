@@ -67,14 +67,14 @@ gulp.task('compile:scripts', function () {
       entries: it.entries,
       detectGlobals: false
     });
-    ELECTRON_MODULES.forEach(function(moduleName) {
+    ELECTRON_MODULES.concat(['ws', 'http', 'url', 'stream', 'events']).forEach(function(moduleName) {
       // exclude built-in Electron modules (e.g. 'app', 'remote', etc...)
       b.exclude(moduleName);
     });
     return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe($.uglify())
+    //.pipe($.uglify())
     .pipe(gulp.dest(it.dest));
     ;
   });
@@ -158,12 +158,10 @@ gulp.task('reload:browser', function () {
     electronProc.kill();
   }
   electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
-  electronProc.on('message', function (m) {
-    console.log(m);
-  });
 });
 
 gulp.task('serve', ['build', 'watch'], function () {
+  require('./tools/electron-devutil').start();
   electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
   gulp.watch([serveDir + '/app.js'], ['reload:browser']);
 });
