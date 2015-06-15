@@ -9,10 +9,7 @@ var buffer = require('vinyl-buffer');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
-var electron = require('electron-prebuilt');
-var proc = require('child_process');
 var helper = require('./tools/electron-package-helper');
-
 var electronProcess = require('./tools/electron-devutil/server').create();
 
 var ELECTRON_MODULES = require('./electron-modules.json');
@@ -159,9 +156,14 @@ gulp.task('reload:browser', function () {
   electronProcess.restart();
 });
 
+gulp.task('reload:renderer', function () {
+  electronProcess.reload();
+});
+
 gulp.task('serve', ['build', 'watch'], function () {
   electronProcess.start();
   gulp.watch([serveDir + '/app.js'], ['reload:browser']);
+  gulp.watch([serveDir + '/renderer/**.js', serveDir + '/index.html', serveDir + '/styles/**.css'], ['reload:renderer']);
 });
 
 gulp.task('clean', function (done) {

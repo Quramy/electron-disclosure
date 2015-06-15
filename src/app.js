@@ -29,7 +29,6 @@ app.on('start', () => {
   if(mainWindow) mainWindow.emit('start');
 });
 
-
 app.on('stop', () => {
   if(mainWindow) mainWindow.emit('stop');
 });

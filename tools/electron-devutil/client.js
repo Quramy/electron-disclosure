@@ -52,8 +52,13 @@ Client.prototype.sendMessage = function (type, data) {
 };
 
 Client.prototype.registerHandler = function () {
-  this.on('responsePosition', function (data) {
-    data.bounds && this.browserWindow.setBounds(data.bounds);
+  this.on('setBounds', function (data) {
+    data.bounds && this.browserWindow && this.browserWindow.setBounds(data.bounds);
+  }.bind(this));
+
+  this.on('reload', function () {
+    if(!this.browserWindow) return;
+    this.browserWindow.reloadIgnoringCache();
   }.bind(this));
 };
 
