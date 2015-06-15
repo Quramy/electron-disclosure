@@ -12,6 +12,9 @@ var packageJson = require('./package.json');
 var electron = require('electron-prebuilt');
 var proc = require('child_process');
 var helper = require('./tools/electron-package-helper');
+
+var electronProcess = require('./tools/electron-devutil/server').create();
+
 var ELECTRON_MODULES = require('./electron-modules.json');
 
 var serveDir    = '.serve';
@@ -152,17 +155,12 @@ gulp.task('watch', function () {
 
 gulp.task('build', ['inject:css', 'compile:scripts']);
 
-var electronProc;
 gulp.task('reload:browser', function () {
-  if(electronProc) {
-    electronProc.kill();
-  }
-  electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
+  electronProcess.restart();
 });
 
 gulp.task('serve', ['build', 'watch'], function () {
-  require('./tools/electron-devutil').start();
-  electronProc = proc.spawn(electron, [process.cwd()], {stdio: 'inherit'});
+  electronProcess.start();
   gulp.watch([serveDir + '/app.js'], ['reload:browser']);
 });
 
