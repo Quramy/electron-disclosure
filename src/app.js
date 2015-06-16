@@ -41,7 +41,7 @@ app.on('ready', () => {
   });
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
   if(process.env.NODE_ENV === 'develop') {
-    require('../tools/electron-devutil/client').init(app, mainWindow);
+    require('electron-connect').client.create(mainWindow);
   }
 });
 

@@ -9,8 +9,8 @@ var buffer = require('vinyl-buffer');
 var mainBowerFiles = require('main-bower-files');
 var del = require('del');
 var packageJson = require('./package.json');
+var electronProcess = require('electron-connect').server.create();
 var helper = require('./tools/electron-package-helper');
-var electronProcess = require('./tools/electron-devutil/server').create();
 
 var ELECTRON_MODULES = require('./electron-modules.json');
 

@@ -5,7 +5,7 @@
   "main": ".serve/app.js",
   "scripts": {
     "build": "gulp",
-    "start": "gulp;node node_modules/electron-prebuilt/cli.js .",
+    "start": "gulp serve",
     "install": "bower install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,7 @@
   "devDependencies": {
     "browserify": "^10.2.3",
     "del": "^1.1.1",
+    "electron-connect": "^0.1.4",
     "electron-download": "^1.0.5",
     "electron-prebuilt": "^0.27.2",
     "extract-zip": "^1.0.3",
@@ -36,8 +37,7 @@
     "ncp": "^2.0.0",
     "plist": "^1.1.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "ws": "^0.7.2"
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
     "lodash": "^3.9.3",
