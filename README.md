@@ -7,25 +7,19 @@ It captures your desktop by 5 minutes and posts tweet with the captured images.
 
 ![capture](./capt_disclosure.png)
 
-## Run
+## Install
 
 ```sh
 npm install
-npm start
 ```
 
-## Watch
+## Run
 
 ```sh
 gulp serve
 ```
 
-This task provides the following:
-
-* If files `*.scss`, `*.js` and `*.jsx`, re-compile them.
-* If files under `src/browser` change, restart Electron BrowserProcess(main process).
-
-## Enable develop menu
+### Enable develop menu
 
 Execute the following command, so you can use develop menu(Reload and Toggle dev tools) in the reneder process.
 
