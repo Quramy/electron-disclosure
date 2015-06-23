@@ -8,11 +8,6 @@ import MenuItem from 'menu-item';
 import crashReporter from 'crash-reporter';
 import appMenu from './browser/menu/appMenu';
 import devMenu from './browser/menu/submenus/development';
-
-// TODO Fix me
-// After browserify, calling remote.require('./browser/twitter') in renderer process was failed,
-// because remote.require is implemented by wrapping process.mainModule.require (atom.asar/browser/lib/rpc-server.js).
-// So this API may miss the "browserified module".
 import twitter from './browser/twitter';
 
 let mainWindow = null;
@@ -40,8 +35,5 @@ app.on('ready', () => {
     height: 600
   });
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
-  if(process.env.NODE_ENV === 'develop') {
-    require('electron-connect').client.create(mainWindow);
-  }
 });
 

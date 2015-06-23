@@ -11,8 +11,9 @@
 <body>
 <div id="container"></div>
 <video id="video" class="hidden"></video>
-<!-- inject:bundle.js -->
-<script>require('./renderer/bootstrap');</script>
-<!-- endinject -->
+<!-- build:remove -->
+<script>require('electron-connect').client.create()</script>
+<!-- endbuild -->
+<script>require('./renderer/bootstrap')</script>
 </body>
 </html>
