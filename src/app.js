@@ -7,13 +7,13 @@ import Menu from 'menu';
 import MenuItem from 'menu-item';
 import crashReporter from 'crash-reporter';
 import appMenu from './browser/menu/appMenu';
-import devMenu from './browser/menu/submenus/development';
 import twitter from './browser/twitter';
+import debug from 'electron-debug';
 
 let mainWindow = null;
 if(process.env.NODE_ENV === 'develop'){
   crashReporter.start();
-  appMenu.append(devMenu);
+  debug();
 }
 
 app.on('window-all-closed', () => {
