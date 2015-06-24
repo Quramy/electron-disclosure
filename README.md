@@ -7,6 +7,13 @@ It captures your desktop by 5 minutes and posts tweet with the captured images.
 
 ![capture](./capt_disclosure.png)
 
+## Why?
+This is useless app. I made it to tell the following:
+
+* How to capture desktop image in an Electron app
+* How to connect resources controlled by OAuth in an Electron app
+
+
 ## Install
 
 ```sh
