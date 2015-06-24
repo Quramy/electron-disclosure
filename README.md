@@ -34,3 +34,6 @@ gulp package
 ```
 
 This task makes application distribution packages under the `./release` directory.
+
+## License
+This software is released under the MIT License, see LICENSE.txt.
