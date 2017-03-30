@@ -1,5 +1,7 @@
 # electron-disclosure
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Quramy/electron-disclosure.svg)](https://greenkeeper.io/)
+
 This is a sample application with [github Electron](http://electron.atom.io/).
 
 It captures your desktop by 5 minutes and posts tweet with the captured images.
